@@ -1,0 +1,111 @@
+<style>
+    body {
+        font-size: 0px;
+        background-color: #222;
+    }
+    .field {
+        background-color: #333;
+        display: inline-block;
+        padding: 10px;
+        margin: 5px;
+        width: 122px;
+    }
+    .field .field-title {
+        font-size: 12px;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #ccc;
+    }
+    input[type=text], input[type=number] {
+        background-color: #151515;
+        border: 1px solid #555;
+        color: #fff;
+        height: 24px;
+        width: 120px;
+    }
+    select {
+        background-color: #222;
+        border: 1px solid #222;
+        color: #fff;
+        height: 24px;
+        width: 100px;
+        width: 120px;
+    }
+</style>
+<script>
+    const fields = `
+        width:number
+        height:number
+        rotPerFrame:number
+        visibleRad:number
+        <br>
+        start:number
+        end:number
+        nLats:number
+        nLongs:number
+        <br>
+        mode:globeUp,globeSide,aeUp,aeSide
+        cumulative:true,false
+        hideNegativeAlt:true,false
+        prevOpacity:number
+        <br>
+        backgroundColor:color
+        earthLineColor:color
+        prevSightColor:color
+        currSightColor:color
+    `;
+    const write = html => document.write(html.replace(/\s*\n\s*/));
+    fields.trim().split(/\s+/).forEach(field => {
+        const [ name, type = 'text' ] = field.split(':');
+        if (name.startsWith('<')) {
+            write(name);
+            return;
+        }
+        if (type.includes(',')) {
+            write(`
+                <div class="field">
+                    <div class="field-title">
+                        ${name}
+                    </div>
+                    <div class="field-content">
+                        <select name="${name}">
+                            ${type.split(',').map(option => {
+                                return `<option value=${option}>${option}</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+                </div>
+            `);
+            return;
+        }
+        write(`
+            <div class="field">
+                <div class="field-title">
+                    ${name}
+                </div>
+                <div class="field-content">
+                    <input type="${type}" name="${name}">
+                </div>
+            </div>
+        `);
+    });
+</script>
+<br>
+<canvas></canvas>
+<script src="processed.js"></script>
+<script src="index.js"></script>
+<script>
+    [...document.querySelectorAll('[name]')].forEach(input => {
+        const name = input.getAttribute('name');
+        input.value = window[name];
+        input.onchange = function() {
+            let val = this.value;
+            if (val.match(/^\d+(\.\d+)$/)) {
+                val = Number(val);
+            }
+            window[name] = val;
+            renderFrame(end);
+        };
+    });
+    renderFrame(end);
+</script>
