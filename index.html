@@ -31,7 +31,21 @@
         width: 100px;
         width: 120px;
     }
+    canvas {
+        margin-top: 10px;
+    }
+    textarea {
+        background-color: #151515;
+        border: 1px solid #555;
+        color: #fff;
+        height: 24px;
+        width: 400px;
+        height: 150px;
+        margin: 10px;
+    }
 </style>
+<textarea></textarea>
+<br>
 <script>
     const fields = `
         width:number
@@ -92,7 +106,6 @@
 </script>
 <br>
 <canvas></canvas>
-<script src="processed.js"></script>
 <script src="index.js"></script>
 <script>
     [...document.querySelectorAll('[name]')].forEach(input => {
@@ -108,4 +121,8 @@
         };
     });
     renderFrame(end);
+    document.querySelector('textarea').onchange = function() {
+        rows = this.value.trim().split(/\s*\n\s*/).map(line => line.split(/\s+/).map(toRad));
+        renderFrame(end);
+    };
 </script>

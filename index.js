@@ -5,6 +5,8 @@ const round = (val) => val.toFixed(1)*1;
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
+let rows = [];
+
 window.start = 0;
 window.end = 24;
 window.width = 800;
